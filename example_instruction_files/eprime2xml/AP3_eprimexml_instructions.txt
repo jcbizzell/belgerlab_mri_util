@@ -1,0 +1,9 @@
+param $firstmritime=Fixation1.OnsetTime:msec
+
+event $type=@'cue' $onset='Cue.OnsetTime':msec $duration=Cue.Duration:msec %side='CueLocation'
+
+event $type=@'target' $onset='Target.OnsetTime':msec $duration=Target.Duration:msec %side='TargetLocation' %RT=Target.RT:msec %TargCorr=Target.ACC %feedback=FeedbackTitle
+
+event $type=@'anticipation' $onset=Fixation2.OnsetTime:msec $duration=Fixation2.Duration:msec %TargCorr=Target.ACC %feedback=FeedbackTitle
+
+event $type=@'feedback' $onset=Feedback.OnsetTime:msec $duration=Feedback.Duration:msec %TargCorr=Target.ACC %feedback=FeedbackTitle %feedbackchange=FeedbackChangeAmt

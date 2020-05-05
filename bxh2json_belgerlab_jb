@@ -1,0 +1,168 @@
+#!/usr/bin/env python2
+# -*- coding: iso-8859-1 -*-
+
+import os
+import subprocess
+import json
+import argparse
+import tempfile
+import glob
+import shutil
+import re
+import lxml.etree as ET
+
+bxhtoolsdir = ''
+parser = argparse.ArgumentParser(description='convert BXH file to BIDS json format')
+parser.add_argument('--input','-i', dest="infile", required=True, help="BXH input file")
+parser.add_argument('--bxhtoolsdir','-b', dest="bxhtoolsdir", help="Location of the BXH tools bxh_slicetiming and extractdiffdirs")
+args = parser.parse_args()
+
+base = None
+oname = None
+nspace={'b': 'http://www.biac.duke.edu/bxh'}
+
+def get_slicetime(inbxh):
+    slicetiming = []
+    try:
+        st_cmd = 'bxh_slicetiming'
+        tmpf = tempfile.mkstemp()
+        if os.path.isfile(tmpf[-1]):
+            os.remove(tmpf[-1])
+        if bxhtoolsdir: 
+            st_cmd = os.path.join(bxhtoolsdir,st_cmd)
+        subprocess.call([st_cmd,'--sec',inbxh,tmpf[-1]])
+
+        lines = open(tmpf[-1],'r').readlines()
+        slicetiming = [float(l.strip()) for l in lines]
+    except Exception as e:
+        # print(e)
+        print("No acquisitiontimeindex found. Skipping slicetime generation.")
+    finally:
+        return slicetiming
+
+def get_dwifiles(inbxh,basename):
+    dwifiles = []
+    try:
+        tmpfolder = tempfile.mkdtemp()
+        subprocess.call(['extractdiffdirs','--fsl',inbxh,os.path.join(tmpfolder,basename + '.bvec'),os.path.join(tmpfolder,basename + '.bval')])
+        dwifiles += glob.glob(os.path.join(tmpfolder,basename + ".*"))
+    except Exception as e:
+        print(e)
+    finally:
+        return dwifiles
+
+#check/read the input file
+if args.infile:
+    if os.path.isfile(args.infile):
+        try:
+            # xmlh = bxh.load(str(args.infile), nodataok=True)
+            doc = ET.parse(str(args.infile))
+            root = doc.getroot()
+            datarec = root.find('b:datarec',namespaces=nspace)
+            acqelem = root.find('b:acquisitiondata', namespaces=nspace)
+            #print('finished loading')
+            # imdesc=acqelem.findtext('b:description',namespaces=nspace).lower()
+            base = os.path.splitext(os.path.basename(args.infile))[0]
+            oname = os.path.join(os.path.dirname(args.infile),base + '.json')
+        except Exception as e:
+            print(e)
+            raise e
+    else:
+        raise IOError(args.infile, "does not exist")
+
+#possible fields from BIDS-spec : matching field from BXH
+possible = { "Manufacturer" : "scannermanufacturer",
+    "ManufacturersModelName" : "scannermodelname",
+    "MagneticFieldStrength" : "magneticfield",
+    "DeviceSerialNumber" : "scannerserialnumber",
+    "StationName" : "scanner",
+    "SoftwareVersions" : "softwareversions",
+    "ReceiveCoilName" : "receivecoilname",
+    "ReceiveCoilActiveElements" : None,
+    "GradientSetType" : None,
+    "MRTransmitCoilSequence" : None,
+    "MatrixCoilMode" : None,
+    "CoilCombinationMethod" : None,
+    "PulseSequenceType" : "psdname",
+    "ScanningSequence" : "scanningsequence",
+    "SequenceVariant" : "sequencevariant",
+    "ScanOptions" : "scanoptions",
+    "AcquisitionNumber" : "acquisitionnumber",
+    "SeriesNumber" : "seriesnumber",
+    "SeriesDescription" : "description",
+    "SequenceName" : "psdname",
+    "ProtocolName": "protocolname",
+    "PulseSequenceDetails" : None,
+    "NumberShots" : "nshots",
+    "ParallelReductionFactorInPlane" : None,
+    "ParallelAcquisitionTechnique" : None,
+    "PartialFourier" : None,
+    "PartialFourierDirection" : None,
+    "PhaseEncodingDirection" : None,
+    "EffectiveEchoSpacing" : None,
+    "TotalReadoutTime" : None,
+    "EchoTime" : "te",
+    "EchoTrainLength" : "echotrainlength",
+    "InversionTime" : "ti",
+    "SliceTiming" : None, #bxh_slicetiming
+    "DiffDirs" : None, #extractdiffdirs
+    "SliceEncodingDirection" : None,
+    "DwellTime" : None,
+    "FlipAngle" : "flipangle",
+    "MultibandAccelerationFactor" : None,
+    "AnatomicalLandmarkCoordinates" : None,
+    "InstitutionName" : "institution",
+    "InstitutionAddress" : "institutionaddress",
+    "InstitutionalDepartmentName" : "institutionaldepartmentname",
+    "RepetitionTime" : "tr",
+}
+
+#hold the output dict
+output = {}
+
+#iterate through possible
+for k,v in possible.items():
+    if k == "SliceTiming":
+        dimensions = datarec.findall('b:dimension',namespaces=nspace)
+        st = []
+        for dim in dimensions: 
+            if dim.get("type") == 't': 
+                st = get_slicetime(args.infile)
+                break
+        if len(st) != 0:
+            output[k] = st
+    elif k == 'DiffDirs':
+        #get bval/bvec if diffusion 
+        # if xmlh.get_acqdata_elem('bvalues') is not None:
+        if acqelem.findtext('b:bvalues',namespaces=nspace) is not None:
+            files = get_dwifiles(args.infile,base)
+            if len(files) > 0:
+                for f in files:
+                    shutil.move(f,os.path.join(os.path.dirname(args.infile),os.path.basename(f)))
+                    print("wrote : %s " % os.path.basename(f) )
+    elif v is not None:
+        #el = xmlh.get_acqdata_elem(v)
+        el=acqelem.findtext('b:'+v,namespaces=nspace)
+        print(k,v,el)
+        if el is not None:
+            # print(v,lxml.etree.dump(el))
+            if re.search('Time',k):
+                output[k]=[]
+                for i in el.split():
+                    output[k].append(float(i)/1000)
+                if len(output[k]) == 1:
+                    output[k] = output[k][0]
+            elif k in ("SeriesNumber","AcquisitionNumber"):
+                output[k] = int(el)
+            elif k == "DeviceSerialNumber":
+                output[k] = el
+            elif re.search('^\d{1,}$',el):
+                output[k] = float(el)
+            else:
+                output[k] = el
+
+if len(output) > 0:
+    with open(oname, 'w') as outfile:
+        json.dump(output,outfile,sort_keys=True,indent=1)
+else:
+    print("could not fine relevant fields")

@@ -1,0 +1,21 @@
+EPRIME_LINE_TEXT,RUN,WRITE_THIS_LINE,DUMMYCOL
+Level: 3,1,1,1
+*** LogFrame Start ***,1,1,1
+Procedure: TrialProc,1,1,1
+TrialList: 1,1,1,1
+RunNumber: 1,1,1,1
+Level: 3,2,1,1
+*** LogFrame Start ***,2,1,1
+Procedure: TrialProc,2,1,1
+TrialList: 41,2,1,1
+RunNumber: 2,2,1,1
+Level: 3,3,1,1
+*** LogFrame Start ***,3,1,1
+Procedure: TrialProc,3,1,1
+TrialList: 81,3,1,1
+RunNumber: 3,3,1,1
+Level: 3,4,1,1
+*** LogFrame Start ***,4,1,1
+Procedure: TrialProc,4,1,1
+TrialList: 122,4,1,1
+RunNumber: 4,4,1,1

@@ -1,0 +1,38 @@
+overwrite
+querylanguage event
+
+querylabel cue_left
+query "($type=='cue') & side('CUEL')"
+
+querylabel cue_right
+query "($type=='cue') & side('CUER')"
+
+querylabel cue_all
+query "($type=='cue')"
+
+querylabel target_left
+query "($type=='target') & side('TARGETL')"
+
+querylabel target_right
+query "($type=='target') & side('TARGETR')"
+
+querylabel target_all
+query "($type=='target')"
+
+querylabel anticipation
+query "($type=='anticipation')"
+
+querylabel feedback_win
+query "($type=='feedback') & feedback('YOU WIN!')"
+
+querylabel feedback_lose_incorrect
+query "($type=='feedback') & feedback('WRONG!')"
+
+querylabel feedback_lose_tooslow
+query "($type=='feedback') & feedback('TOO SLOW!')"
+
+querylabel feedback_lose_all
+query "($type=='feedback') & (feedback('WRONG!') | feedback('TOO SLOW!'))"
+
+querylabel feedback_all
+query "($type=='feedback')"

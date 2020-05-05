@@ -1,0 +1,59 @@
+overwrite
+querylanguage event
+
+querylabel null
+query "($type=='null')"
+
+querylabel face_all
+query "($type=='face')"
+
+querylabel face_subj_rated_happy
+query "($type=='face') & (response('7'))"
+
+querylabel face_subj_rated_angry
+query "($type=='face') & (response('0'))"
+
+querylabel face_000
+query "($type=='face') & (happypercent('0'))"
+
+querylabel face_007
+query "($type=='face') & (happypercent('7'))"
+
+querylabel face_014
+query "($type=='face') & (happypercent('14'))"
+
+querylabel face_021
+query "($type=='face') & (happypercent('21'))"
+
+querylabel face_029
+query "($type=='face') & (happypercent('29'))"
+
+querylabel face_036
+query "($type=='face') & (happypercent('36'))"
+
+querylabel face_043
+query "($type=='face') & (happypercent('43'))"
+
+querylabel face_050
+query "($type=='face') & (happypercent('50'))"
+
+querylabel face_057
+query "($type=='face') & (happypercent('57'))"
+
+querylabel face_064
+query "($type=='face') & (happypercent('64'))"
+
+querylabel face_071
+query "($type=='face') & (happypercent('71'))"
+
+querylabel face_079
+query "($type=='face') & (happypercent('79'))"
+
+querylabel face_086
+query "($type=='face') & (happypercent('86'))"
+
+querylabel face_093
+query "($type=='face') & (happypercent('93'))"
+
+querylabel face_100
+query "($type=='face') & (happypercent('100'))"

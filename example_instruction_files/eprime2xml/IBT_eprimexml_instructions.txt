@@ -1,0 +1,5 @@
+param $firstmritime=Magnetization.OnsetTime:msec
+
+event $type=@'face' $onset='Stimulus.OnsetTime':msec $duration=Stimulus.Duration:msec %image='Stimulus' %happypercent='HappyPercent' %maskduration=Mask.Duration:msec %RT='ISIFixation.RT' %response='ISIFixation.RESP' $MATCHEQUAL='TrialType'@'Stim'
+
+event $type=@'null' $onset='Stimulus.OnsetTime':msec $duration=Stimulus.Duration:msec %image='Stimulus' %happypercent='HappyPercent' %maskduration=Mask.Duration:msec %RT='ISIFixation.RT' %response='ISIFixation.RESP' $MATCHEQUAL='TrialType'@'Null'
