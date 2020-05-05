@@ -14,7 +14,7 @@ SPHRSZ=$5
 
 # Set variable
 
-OUTDIR=/mnt/BIAC/munin.dhe.duke.edu/Belger/ADOLSTRESS.01/Analysis/ROIs
+OUTDIR=/proj/belgerlab/projects/Cognit_MRI/Analysis/rois
 
 #IMAGE, X Y Z coords outname, if your coordinate is 36,46,45, will create a one point mask 
 fslmaths $FSLDIR/data/standard/MNI152_T1_2mm_brain -add 10000 -roi $X 1 $Y 1 $Z 1 0 1 $OUTDIR/${ROI}_point_mask
