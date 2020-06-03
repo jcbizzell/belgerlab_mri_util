@@ -14,7 +14,7 @@ args = parser.parse_args()
 # Get the file path and file name
 fpath = os.path.dirname(args.infile)
 fname = os.path.basename(args.infile)
-fileparts = fname.split('_')
+fileparts = fname.split('---')
 # Add zeros in front of series and acquisition 
 fileparts[0]=fileparts[0].zfill(args.srspad)
 fileparts[1]=fileparts[1].zfill(args.acqpad)
