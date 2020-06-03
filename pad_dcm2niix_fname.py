@@ -20,5 +20,5 @@ fileparts[0]=fileparts[0].zfill(args.srspad)
 fileparts[1]=fileparts[1].zfill(args.acqpad)
 newfile=fileparts[0]
 for s in fileparts[1:]: 
-    newfile=newfile+"_"+s
+    newfile=newfile+"---"+s
 os.rename(args.infile,os.path.join(fpath,newfile))
