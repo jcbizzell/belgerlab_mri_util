@@ -105,7 +105,7 @@ if args.in_file[-3:] == 'bxh':
     # TODO: if file has .nii.gz with is, change args.infile to name of NIFTI file
 elif args.in_file[-6:] == 'nii.gz': 
     # Get the description from the file name
-    fileparts=os.path.basename(args.in_file).split('_')
+    fileparts=os.path.basename(args.in_file).split('---')
     imdesc=fileparts[3]
     for s in fileparts[4:]: 
         imdesc=imdesc+"_"+s
