@@ -2,7 +2,6 @@
 # -*- coding: iso-8859-1 -*-
 
 import sys, os, csv
-import lxml.etree as et
 
 # More info here: https://bids-specification.readthedocs.io/en/latest/04-modality-specific-files/05-task-events.html
 # And here: https://bids-specification.readthedocs.io/en/latest/04-modality-specific-files/07-behavioral-experiments.html
