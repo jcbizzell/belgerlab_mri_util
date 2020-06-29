@@ -64,10 +64,10 @@ if args.skeleton_dir:
 
 # Loop through the BIDS directories
 for dirname in bids_roots:
-    outtsv = os.path.join(dirname,args.bids_subjid,"sessions.tsv")
+    outtsv = os.path.join(dirname,args.bids_subjid,args.bids_subjid+"_sessions.tsv")
     # Copy the session.json file
     try:
-        copyfile(args.json_file, os.path.join(dirname,args.bids_subjid,"sessions.json"))
+        copyfile(args.json_file, os.path.join(dirname,args.bids_subjid,args.bids_subjid+"_sessions.json"))
     except IOError as e:
         sys.exit('Error - unable to copy file: {}, {}'.format(args.json_file, e))
     except Exception as e:
