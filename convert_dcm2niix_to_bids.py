@@ -101,9 +101,9 @@ if not srs_desc:
 # Create the new output filename
 for dirname in bids_roots:
     if args.series_num == "N/A":
-        outname=os.path.join(dirname,bidssubjid,visit,srs_desc[4],srs_desc[2].replace('{SUBJ}',bidssubjid))
+        outname=os.path.join(dirname,bidssubjid,visit,srs_desc[4],srs_desc[2].replace('{SUBJ}',bidssubjid)).replace('{SESS}',visit)
     else:
-        outname=os.path.join(dirname,bidssubjid,visit,srs_desc[4],srs_desc[2].replace('{SUBJ}',bidssubjid).replace('{SRS}',args.series_num))
+        outname=os.path.join(dirname,bidssubjid,visit,srs_desc[4],srs_desc[2].replace('{SUBJ}',bidssubjid).replace('{SESS}',visit).replace('{SRS}',args.series_num))
     outname=check_if_already_converted(outname)
     if dirname == opts['skeleton_dir_path']:
         print('Creating skeleton file {}'.format(outname+".nii.gz"))
