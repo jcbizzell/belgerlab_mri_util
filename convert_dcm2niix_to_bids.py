@@ -21,7 +21,7 @@ parser.add_argument("in_file", help="input NII.GZ filename")
 parser.add_argument("bids_dir", 
     help="output directory; the root folder of a BIDS valid dataset (sub-XXXXX folders should be found at the top level in this folder)")
 parser.add_argument("opts_file", help="convert_dcm2niix_to_bids options CSV file")
-# parser.add_argument("-d", "--add_date", help="add date and time to output filename", action="store_true")
+parser.add_argument("-s", "--series_num", help="add series to output filename; will be put in acq section", nargs='?', type=str, default="N/A")
 args = parser.parse_args()
 
 # Initialize some variables
@@ -85,7 +85,7 @@ if args.in_file[-6:] == 'nii.gz':
     imdesc=fileparts[3]
     for s in fileparts[4:]: 
         imdesc=imdesc+"_"+s
-    imdesc = imdesc.replace('.nii.gz','')
+    # imdesc = imdesc.replace('.nii.gz','')
 else: 
     sys.exit('File format must be NIIGZ: {}'.format(args.in_file))
 
@@ -100,7 +100,10 @@ if not srs_desc:
 
 # Create the new output filename
 for dirname in bids_roots:
-    outname=os.path.join(dirname,bidssubjid,visit,srs_desc[4],srs_desc[2].replace('{SUBJ}',bidssubjid))
+    if args.series_num == "N/A":
+        outname=os.path.join(dirname,bidssubjid,visit,srs_desc[4],srs_desc[2].replace('{SUBJ}',bidssubjid))
+    else:
+        outname=os.path.join(dirname,bidssubjid,visit,srs_desc[4],srs_desc[2].replace('{SUBJ}',bidssubjid).replace('{SRS}',args.series_num))
     outname=check_if_already_converted(outname)
     if dirname == opts['skeleton_dir_path']:
         print('Creating skeleton file {}'.format(outname+".nii.gz"))
