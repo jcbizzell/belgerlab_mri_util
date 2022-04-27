@@ -8,6 +8,8 @@ from belgerlab_utils import MyParser
 parser = MyParser(description='Create/append dcm2niix series info CSV file')
 parser.add_argument("raw_dir", help="raw data directory")
 parser.add_argument("list_file", help="series list CSV file")
+parser.add_argument("subj_id", help="BIDS subject ID")
+parser.add_argument("sess", help="BIDS session")
 args = parser.parse_args()
 
 # Check to see if the raw directory exists
@@ -51,7 +53,7 @@ for fname in sorted(os.listdir(args.raw_dir)):
         
         # If image description not in list, add it to series list CSV
         if not series_found:
-            print('Writing {} to {}'.format(imdesc,args.list_file))
+            print('Writing {} to {} for {} {}'.format(imdesc,args.list_file,args.subj_id,args.sess))
             with open(args.list_file, 'a', newline='') as csvfile:
                 series = csv.writer(csvfile)
                 series.writerow([imdesc])
