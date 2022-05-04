@@ -96,6 +96,7 @@ for i in conv_instruct:
         srs_desc = i
         break
 if not srs_desc: 
+    print('Error - could not find series_description in options file matching: {}, {} {}'.format(imdesc,bidssubjid,visit))
     sys.exit('Error - could not find series_description for visit {} in options file matching: {}'.format(visit,imdesc))
 
 # Create the new output filename
