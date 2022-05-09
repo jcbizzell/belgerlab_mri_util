@@ -92,7 +92,8 @@ else:
 # Look for the image description in the options file converstion instructions
 srs_desc = []
 for i in conv_instruct: 
-    if (imdesc in i[1] or i[1] in imdesc or imdesc in i[1].replace(' ','_') or i[1].replace(' ','_') in imdesc) and (visit in i[3] or i[3] in visit): 
+    # if (imdesc in i[1] or i[1] in imdesc or imdesc in i[1].replace(' ','_') or i[1].replace(' ','_') in imdesc) and (visit in i[3] or i[3] in visit): 
+    if imdesc in i[1] or i[1] in imdesc or imdesc in i[1].replace(' ','_') or i[1].replace(' ','_') in imdesc:
         srs_desc = i
         break
 if not srs_desc: 
@@ -102,9 +103,11 @@ if not srs_desc:
 # Create the new output filename
 for dirname in bids_roots:
     if args.series_num == "N/A":
-        outname=os.path.join(dirname,bidssubjid,visit,srs_desc[4],srs_desc[2].replace('{SUBJ}',bidssubjid)).replace('{SESS}',visit)
+        # outname=os.path.join(dirname,bidssubjid,visit,srs_desc[4],srs_desc[2].replace('{SUBJ}',bidssubjid)).replace('{SESS}',visit)
+        outname=os.path.join(dirname,bidssubjid,visit,srs_desc[3],srs_desc[2].replace('{SUBJ}',bidssubjid)).replace('{SESS}',visit)
     else:
-        outname=os.path.join(dirname,bidssubjid,visit,srs_desc[4],srs_desc[2].replace('{SUBJ}',bidssubjid).replace('{SESS}',visit).replace('{SRS}',args.series_num))
+        # outname=os.path.join(dirname,bidssubjid,visit,srs_desc[4],srs_desc[2].replace('{SUBJ}',bidssubjid).replace('{SESS}',visit).replace('{SRS}',args.series_num))
+        outname=os.path.join(dirname,bidssubjid,visit,srs_desc[3],srs_desc[2].replace('{SUBJ}',bidssubjid).replace('{SESS}',visit).replace('{SRS}',args.series_num))
     outname=check_if_already_converted(outname)
     if dirname == opts['skeleton_dir_path']:
         print('Creating skeleton file {}'.format(outname+".nii.gz"))
