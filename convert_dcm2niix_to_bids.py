@@ -55,7 +55,8 @@ try:
         try: 
             # Loop through the options file
             for row in options:
-                if len(row) == 5:
+                # if len(row) == 5:
+                if len(row) == 4:
                     if row[0] in 'series_description' or 'series_description' in row[0]: 
                         conv_instruct.append(row)
                     else: 
@@ -91,7 +92,9 @@ else:
 
 # Look for the image description in the options file converstion instructions
 srs_desc = []
+print(imdesc)
 for i in conv_instruct: 
+    print("  "+i[1])
     # if (imdesc in i[1] or i[1] in imdesc or imdesc in i[1].replace(' ','_') or i[1].replace(' ','_') in imdesc) and (visit in i[3] or i[3] in visit): 
     if imdesc in i[1] or i[1] in imdesc or imdesc in i[1].replace(' ','_') or i[1].replace(' ','_') in imdesc:
         srs_desc = i
