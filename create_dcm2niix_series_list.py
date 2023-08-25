@@ -39,10 +39,15 @@ for fname in sorted(os.listdir(args.raw_dir)):
 
         # Get the description from the file name
         fileparts=os.path.basename(fname).split('_')
-        imdesc=fileparts[3]
-        for s in fileparts[4:]: 
+        idx=0
+        for s in fileparts: 
+            if ("dtmpdcm" not in s) and not s.isnumeric(): 
+                break
+            idx+=1
+        imdesc=fileparts[idx]
+        for s in fileparts[idx+1:]: 
             imdesc=imdesc+"_"+s
-        imdesc = imdesc.replace('.nii.gz','')
+        # imdesc = imdesc.replace('.nii.gz','')
 
         # Look for the image description in the series list
         series_found = False
